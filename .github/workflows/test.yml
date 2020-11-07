@@ -28,8 +28,6 @@ jobs:
       - name: Install dependencies
         run: poetry install -E sqlalchemy
       - name: Run tests
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
           poetry run test
-          poetry run coveralls
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
