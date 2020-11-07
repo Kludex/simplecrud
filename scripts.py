@@ -24,7 +24,3 @@ def test() -> None:
             "--cov-report=xml",
         ]
     )
-
-
-def coveralls() -> None:
-    check_call(["coveralls"])
