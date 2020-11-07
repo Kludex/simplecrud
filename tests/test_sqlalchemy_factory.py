@@ -12,7 +12,9 @@ from crud_factory.factories import CRUDFactory
 Base = declarative_base()
 
 
-@pytest.fixture(params=["sqlite:///"])
+@pytest.fixture(
+    params=["sqlite:///", "postgres://postgres:postgres@localhost:5432/test"]
+)
 def engine(request):
     return create_engine(request.param)
 
