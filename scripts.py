@@ -15,4 +15,12 @@ def lint() -> None:
 
 
 def test() -> None:
-    check_call(["pytest", "tests/"])
+    check_call(
+        [
+            "pytest",
+            "tests/",
+            "--cov=crud_factory",
+            "--cov-report=term-missing:skip-covered",
+            "--cov-report=xml",
+        ]
+    )

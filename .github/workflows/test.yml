@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
       fail-fast: true
 
     services:
@@ -42,3 +42,5 @@ jobs:
         run: poetry install -E sqlalchemy
       - name: Run tests
         run: poetry run test
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1
