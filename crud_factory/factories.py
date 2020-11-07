@@ -1,4 +1,4 @@
-from ._sqlalchemy import CRUDBase
+from crud_factory.sqlalchemy import CRUDBase
 
 
 class CRUDFactory:
