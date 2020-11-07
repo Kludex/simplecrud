@@ -53,6 +53,7 @@ check_format = "scripts:check_format"
 format = "scripts:format"
 lint = "scripts:lint"
 test = "scripts:test"
+coveralls = "scripts:coveralls"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

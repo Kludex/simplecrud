@@ -30,7 +30,7 @@ jobs:
       - name: Run tests
         run: poetry run test
       - name: Upload Coverage
-        run: coveralls
+        run: poetry run coveralls
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
