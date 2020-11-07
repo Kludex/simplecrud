@@ -29,5 +29,5 @@ jobs:
         run: poetry install -E sqlalchemy
       - name: Run tests
         run: poetry run test
-      - name: Upload coverage
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
