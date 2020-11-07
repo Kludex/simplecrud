@@ -6,23 +6,35 @@ from tests.utils import Base
 
 
 @pytest.fixture(
+    scope="session",
     params=[
         "sqlite:///",
         "postgresql://postgres:postgres@localhost:5432/test",
         "mysql://mysql:mysql@127.0.0.1:3306/test",
-    ]
+    ],
 )
 def engine(request):
     return create_engine(request.param)
 
 
-@pytest.fixture(autouse=True)
-def setup_database(engine):
-    Base.metadata.create_all(engine)
+@pytest.fixture(scope="session")
+def connection(engine):
+    _connection = engine.connect()
+    yield _connection
+    _connection.close()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_database(connection):
+    Base.metadata.create_all(bind=connection)
 
 
 @pytest.fixture()
-def session(engine):
-    _session = Session(bind=engine)
+def session(connection):
+    trans = connection.begin()
+
+    _session = Session(bind=connection)
     yield _session
     _session.close()
+
+    trans.rollback()
