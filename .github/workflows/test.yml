@@ -28,6 +28,6 @@ jobs:
       - name: Install dependencies
         run: poetry install -E sqlalchemy
       - name: Run tests
-          poetry run test
+        run: poetry run test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
