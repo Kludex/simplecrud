@@ -46,6 +46,7 @@ sqlalchemy-stubs = "^0.3"
 psycopg2-binary = "^2.8.6"
 mysqlclient = "^2.0.1"
 pytest-coverage = "^0.0"
+coveralls = "^2.1.2"
 
 [tool.poetry.scripts]
 check_format = "scripts:check_format"
