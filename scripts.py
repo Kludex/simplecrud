@@ -2,7 +2,7 @@ from subprocess import check_call
 
 
 def check_format() -> None:
-    check_call(["black", "--check", "--diff", "crud_factory/", "tests/"],)
+    check_call(["black", "--check", "--diff", "crud_factory/", "tests/"])
 
 
 def format() -> None:
@@ -15,4 +15,12 @@ def lint() -> None:
 
 
 def test() -> None:
-    check_call(["pytest", "tests/"])
+    check_call(
+        [
+            "pytest",
+            "tests/",
+            "--cov=crud_factory",
+            "--cov-report=term-missing:skip-covered",
+            "--cov-report=xml",
+        ]
+    )

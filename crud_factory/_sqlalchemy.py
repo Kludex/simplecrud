@@ -2,6 +2,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, ValidationError
+from sqlalchemy.exc import DataError
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
@@ -15,25 +16,26 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         self._model = model
 
     def create(self, db: Session, obj_in: Union[CreateSchemaType, dict]) -> ModelType:
-        """[summary]
+        """Create a database object.
 
         Args:
-            db (Session): [description]
-            obj_in (Union[CreateSchemaType, dict]): [description]
+            db (Session): Database session.
+            obj_in (Union[CreateSchemaType, dict]): Object data.
 
         Raises:
             TypeError: if wrong column is used on `obj_in`.
-            ValidationError: if wrong value on any `obj_in` field.
+            DataError: Invalid value on PostgreSQL.
+            OperationalError: Invalid value on MySQL.
 
         Returns:
-            ModelType: [description]
+            ModelType: Database object.
         """
         try:
             obj_in_data = jsonable_encoder(obj_in)
             db_obj = self._model(**obj_in_data)
             db.add(db_obj)
             db.commit()
-        except (TypeError, ValidationError) as exc:
+        except (TypeError, DataError) as exc:
             raise exc
         else:
             return db_obj
