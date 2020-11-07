@@ -2,7 +2,7 @@ from subprocess import check_call
 
 
 def check_format() -> None:
-    check_call(["black", "--check", "--diff", "crud_factory/", "tests/"],)
+    check_call(["black", "--check", "--diff", "crud_factory/", "tests/"])
 
 
 def format() -> None:
