@@ -29,7 +29,7 @@ jobs:
         run: poetry install -E sqlalchemy
       - name: Run tests
         env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           poetry run test
           poetry run coveralls
