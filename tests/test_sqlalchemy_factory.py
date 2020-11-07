@@ -3,16 +3,30 @@ from pydantic.error_wrappers import ValidationError
 from pydantic.main import BaseModel
 from sqlalchemy.engine import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm.session import Session, sessionmaker
+from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.schema import Column
 from sqlalchemy.sql.sqltypes import Integer, String
 
 from crud_factory.factories import CRUDFactory
 
-engine = create_engine("sqlite:///")
-SessionLocal = sessionmaker(bind=engine)
-
 Base = declarative_base()
+
+
+@pytest.fixture(params=["sqlite:///", "postgresql://postgres:postgres@localhost/test"])
+def engine(request):
+    return create_engine(request.param)
+
+
+@pytest.fixture(autouse=True)
+def setup_database(engine):
+    Base.metadata.create_all(engine)
+
+
+@pytest.fixture()
+def session(engine):
+    _session = Session(bind=engine)
+    yield _session
+    _session.close()
 
 
 class User(Base):
@@ -39,18 +53,6 @@ class UserOut(BaseModel):
 
     class Config:
         orm_mode = True
-
-
-@pytest.fixture(autouse=True)
-def setup_database():
-    Base.metadata.create_all(engine)
-
-
-@pytest.fixture()
-def session():
-    _session = SessionLocal()
-    yield _session
-    _session.close()
 
 
 def test_create_with_dict(session: Session):
