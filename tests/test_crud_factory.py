@@ -1,5 +1,5 @@
-from crud_factory import __version__
+from crudfactory import __version__
 
 
 def test_version():
-    assert __version__ == '0.1.0'
+    assert __version__ == "0.1.0"

@@ -1,4 +1,4 @@
-from crud_factory.factories import CRUDFactory
+from crudfactory.factories import CRUDFactory
 
 __version__ = "0.1.0"
 
