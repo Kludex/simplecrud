@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from crud_factory.factories import CRUDFactory
+from crudfactory.factories import CRUDFactory
 from tests.utils.models import User
 from tests.utils.schemas import UserCreate, UserUpdate
 
