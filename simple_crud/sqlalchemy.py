@@ -21,7 +21,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             obj_in (Union[CreateSchemaType, dict]): Object data.
 
         Raises:
-            TypeError: if wrong column is used on `obj_in`.
+            TypeError: Wrong column used on `obj_in`.
             sqlalchemy.exc.DataError: Invalid value on PostgreSQL.
             sqlalchemy.exc.OperationalError: Invalid value on MySQL.
 
@@ -38,16 +38,12 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """Get a single database object.
 
         Args:
-            session (Session): [description]
-
-        Raises:
-            sqlalchemy.orm.exc.NoResultFound: if no row was found.
-            sqlalchemy.orm.exc.MultipleResultsFound: if multiple rows were found.
+            session (Session): Database session.
 
         Returns:
             ModelType: Database object found.
         """
-        return session.query(self._model).filter(*args).filter_by(**kwargs).one()
+        return session.query(self._model).filter(*args).filter_by(**kwargs).first()
 
     def get_multi(
         self,
@@ -90,18 +86,14 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         return session.query(self._model).filter(*args).filter_by(**kwargs).count()
 
-    # NOTE: Should we support args?
     def update(
-        self,
-        session: Session,
-        obj_in: Union[UpdateSchemaType, Dict[str, Any]],
-        **kwargs
+        self, session: Session, obj_in: Union[UpdateSchemaType, dict], **kwargs
     ) -> ModelType:
         """Update database object based on `obj_update` new values.
 
         Args:
             session (Session): Database session.
-            obj_update (Union[UpdateSchemaType, Dict[str, Any]]): New values.
+            obj_update (Union[UpdateSchemaType, dict]): New values.
 
         Returns:
             ModelType: Database object updated.
