@@ -2,11 +2,13 @@ name: Test
 
 on:
   push:
+    branches:
+      - main
   pull_request:
-    types: [opened, synchronize]
+    branches:
+      - main
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -26,8 +28,8 @@ jobs:
       - name: Install Poetry
         run: pip install poetry
       - name: Install dependencies
-        run: poetry install -E sqlalchemy
+        run: poetry install
       - name: Run tests
-        run: poetry run test
+        run: poetry run pytest tests/ --cov=simplecrud --cov-report=term-missing:skip-covered --cov-report=xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1

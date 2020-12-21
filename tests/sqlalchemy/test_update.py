@@ -1,5 +1,4 @@
 import pytest
-from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.orm.session import Session
 
 from tests.utils import UserUpdate, crud_user
@@ -19,8 +18,7 @@ INVALID_COLUMN = {"name": "Banana", "length": 1}
 )
 def test_update(session: Session, kwargs: dict):
     crud_user.create(session, VALID_DATA)
-    with pytest.raises(NoResultFound):
-        assert crud_user.get(session, **UPDATE_DATA) is not None
+    assert crud_user.get(session, **UPDATE_DATA) is None
     crud_user.update(session, UPDATE_DATA, **kwargs)
     found = crud_user.get(session, **UPDATE_DATA)
     assert {"name": found.name, "age": found.age} == UPDATE_DATA
@@ -36,8 +34,7 @@ def test_update(session: Session, kwargs: dict):
 )
 def test_update_with_pydantic(session: Session, kwargs: dict):
     crud_user.create(session, VALID_DATA)
-    with pytest.raises(NoResultFound):
-        assert crud_user.get(session, **UPDATE_DATA) is not None
+    assert crud_user.get(session, **UPDATE_DATA) is None
     crud_user.update(session, UserUpdate(**UPDATE_DATA), **kwargs)
     found = crud_user.get(session, **UPDATE_DATA)
     assert {"name": found.name, "age": found.age} == UPDATE_DATA
@@ -60,13 +57,13 @@ def test_update_wrong_column(session: Session, kwargs: dict):
 @pytest.mark.parametrize("kwargs", [{"name": "otatoP"}, {"age": 8}])
 def test_update_not_found(session: Session, kwargs: dict):
     crud_user.create(session, VALID_DATA)
-    with pytest.raises(NoResultFound):
-        crud_user.update(session, UPDATE_DATA, **kwargs)
+    assert crud_user.update(session, UPDATE_DATA, **kwargs) is None
 
 
 @pytest.mark.parametrize("kwargs", [{"name": "Potato"}, {"age": 7}, {}])
 def test_update_multiple_rows(session: Session, kwargs: dict):
     crud_user.create(session, VALID_DATA)
     crud_user.create(session, VALID_DATA)
-    with pytest.raises(MultipleResultsFound):
-        crud_user.update(session, UPDATE_DATA, **kwargs)
+    crud_user.update(session, UPDATE_DATA, **kwargs)
+    assert crud_user.count(session, **VALID_DATA) == 1
+    assert crud_user.count(session, **UPDATE_DATA) == 1

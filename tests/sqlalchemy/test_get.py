@@ -1,5 +1,4 @@
 import pytest
-from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.orm.session import Session
 
 from tests.utils import User, UserOut, crud_user
@@ -32,9 +31,8 @@ def test_get(session: Session, args: list, kwargs: dict):
     ],
 )
 def test_get_not_found(session: Session, args: list, kwargs: dict):
-    with pytest.raises(NoResultFound):
-        crud_user.create(session, VALID_DATA)
-        crud_user.get(session, *args, **kwargs)
+    crud_user.create(session, VALID_DATA)
+    assert crud_user.get(session, *args, **kwargs) is None
 
 
 @pytest.mark.parametrize(
@@ -49,5 +47,4 @@ def test_get_not_found(session: Session, args: list, kwargs: dict):
 def test_get_multiple_rows(session: Session, args: list, kwargs: dict):
     crud_user.create(session, VALID_DATA)
     crud_user.create(session, VALID_DATA)
-    with pytest.raises(MultipleResultsFound):
-        crud_user.get(session, *args, **kwargs)
+    assert isinstance(crud_user.get(session, *args, **kwargs), User)

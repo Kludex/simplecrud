@@ -1,13 +1,14 @@
 [tool.poetry]
-name = "crudfactory"
-version = "0.1.0"
-description = "CRUD factory for FastAPI applications."
+name = "simplecrud"
+version = "1.0.0"
+description = "Simple CRUD for FastAPI applications."
 authors = ["Marcelo Trylesinski <marcelotryle@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/Kludex/crud-factory"
-repository = "https://github.com/Kludex/crud-factory"
+homepage = "https://github.com/Kludex/simplecrud"
+repository = "https://github.com/Kludex/simplecrud"
 keywords = ["crud", "fastapi", "sqlalchemy"]
+
 classifiers = [
     "Topic :: Internet",
     "Topic :: Software Development :: Libraries :: Application Frameworks",
@@ -29,9 +30,8 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-pydantic = "^1.7.2"
 fastapi = "^0.61.2"
-SQLAlchemy = { version = "^1.3.20", optional = true }
+SQLAlchemy = "^1.3.20"
 
 [tool.poetry.extras]
 sqlalchemy = ["SQLAlchemy"]

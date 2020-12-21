@@ -1,5 +1,4 @@
 import pytest
-from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.orm.session import Session
 
 from tests.utils import User, UserOut, crud_user
@@ -32,9 +31,8 @@ def test_delete(session: Session, args: list, kwargs: dict):
     ],
 )
 def test_delete_not_found(session: Session, args: list, kwargs: dict):
-    with pytest.raises(NoResultFound):
-        crud_user.create(session, VALID_DATA)
-        crud_user.delete(session, *args, **kwargs)
+    crud_user.create(session, VALID_DATA)
+    crud_user.delete(session, *args, **kwargs)
 
 
 @pytest.mark.parametrize(
@@ -49,5 +47,5 @@ def test_delete_not_found(session: Session, args: list, kwargs: dict):
 def test_delete_multiple_rows(session: Session, args: list, kwargs: dict):
     crud_user.create(session, VALID_DATA)
     crud_user.create(session, VALID_DATA)
-    with pytest.raises(MultipleResultsFound):
-        crud_user.delete(session, *args, **kwargs)
+    crud_user.delete(session, *args, **kwargs)
+    assert crud_user.count(session, **VALID_DATA) == 1
