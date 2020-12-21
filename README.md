@@ -17,6 +17,7 @@
 <p align="center">
     Package based on the FastAPI <a href="https://github.com/cookiecutter/cookiecutter">cookiecutter</a> <a href="https://github.com/tiangolo/full-stack-fastapi-postgresql/blob/master/%7B%7Bcookiecutter.project_slug%7D%7D/backend/app/app/crud/base.py">full-stack-fastapi-postgresql</a>
 </p>
+
 ---
 
 ## Installation
