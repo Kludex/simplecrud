@@ -11,6 +11,7 @@ from tests.utils import Base
         "sqlite:///",
         "postgresql://postgres:postgres@localhost:5432/test",
         "mysql://mysql:mysql@127.0.0.1:3306/test",
+        "mysql://mysql:mysql@127.0.0.1:3307/test",
     ],
 )
 def engine(request):

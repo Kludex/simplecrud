@@ -1,4 +1,4 @@
-from crudfactory import __version__
+from simplecrud import __version__
 
 
 def test_version():
