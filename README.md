@@ -25,6 +25,27 @@ Package based on the FastAPI [cookiecutter](https://github.com/cookiecutter/cook
 pip install simplecrud
 ```
 
+## Usage
+
+The simplest examples is as follow:
+
+```python
+from simplecrud.sync_sqlalchemy import CRUDBase
+
+from app.models import User
+from app.schemas import UserInDB, UserUpdate
+
+crud_user = CRUDBase[User, UserInDB, UserUpdate](User)
+```
+
+If you want to see a full example, you can check the `examples/simple_api`.
+
+Alternately, you can run the app on a `uvicorn` server:
+
+```bash
+uvicorn examples.simple_api.main:app --reload
+```
+
 ## License
 
 This project is licensed under the terms of the MIT license.
