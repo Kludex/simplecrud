@@ -13,12 +13,12 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def __init__(self, model: Type[ModelType]):
         self._model = model
 
-    def create(self, db: Session, obj_in: Union[CreateSchemaType, dict]) -> ModelType:
+    def create(self, db: Session, obj_in: CreateSchemaType) -> ModelType:
         """Create a database object.
 
         Args:
             db (Session): Database session.
-            obj_in (Union[CreateSchemaType, dict]): Object data.
+            obj_in (CreateSchemaType): Object data.
 
         Raises:
             TypeError: if wrong column is used on `obj_in`.
@@ -29,7 +29,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             ModelType: Created object.
         """
         obj_in_data = jsonable_encoder(obj_in)
-        db_obj = self._model(**obj_in_data)
+        db_obj = self._model(**obj_in_data)  # type: ignore
         db.add(db_obj)
         db.commit()
         return db_obj
@@ -38,16 +38,12 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """Get a single database object.
 
         Args:
-            session (Session): [description]
-
-        Raises:
-            sqlalchemy.orm.exc.NoResultFound: if no row was found.
-            sqlalchemy.orm.exc.MultipleResultsFound: if multiple rows were found.
+            session (Session): Database session.
 
         Returns:
             ModelType: Database object found.
         """
-        return session.query(self._model).filter(*args).filter_by(**kwargs).one()
+        return session.query(self._model).filter(*args).filter_by(**kwargs).first()
 
     def get_multi(
         self,
@@ -62,9 +58,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
         Args:
             session (Session): Database session.
-            offset (Optional[int], optional): [description]. Defaults to None.
-            limit (Optional[int], optional): [description]. Defaults to None.
-            order_by (Optional[str], optional): [description]. Defaults to None.
+            offset (Optional[int]): Offset position. Defaults to None.
+            limit (Optional[int]): Size limit. Defaults to None.
+            order_by (Optional[str]): Order by property. Defaults to None.
 
         Returns:
             List[ModelType]: Database objects found.
@@ -107,16 +103,17 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             ModelType: Database object updated.
         """
         db_obj = self.get(session, **kwargs)
-        obj_data = jsonable_encoder(db_obj)
-        if isinstance(obj_in, dict):
-            update_data = obj_in
-        else:
-            update_data = obj_in.dict(exclude_unset=True)
-        for field in obj_data:
-            if field in update_data:
-                setattr(db_obj, field, update_data[field])
-        session.add(db_obj)
-        session.commit()
+        if db_obj is not None:
+            obj_data = jsonable_encoder(db_obj)
+            if isinstance(obj_in, dict):
+                update_data = obj_in
+            else:
+                update_data = obj_in.dict(exclude_unset=True)
+            for field in obj_data:
+                if field in update_data:
+                    setattr(db_obj, field, update_data[field])
+            session.add(db_obj)
+            session.commit()
         return db_obj
 
     def delete(self, session: Session, *args, **kwargs) -> ModelType:
@@ -125,14 +122,11 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         Args:
             session (Session): Database session.
 
-        Raises:
-            NoResultFound: if no row was found.
-            MultipleResultsFound: if multiple rows were found.
-
         Returns:
             ModelType: Deleted database object.
         """
         obj = self.get(session, *args, **kwargs)
-        session.delete(obj)
-        session.commit()
+        if obj is not None:
+            session.delete(obj)
+            session.commit()
         return obj
