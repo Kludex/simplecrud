@@ -27,7 +27,7 @@ pip install simplecrud
 
 ## Usage
 
-The simplest examples is as follow:
+The simplest example is as follow:
 
 ```python
 from simplecrud.sync_sqlalchemy import CRUDBase
